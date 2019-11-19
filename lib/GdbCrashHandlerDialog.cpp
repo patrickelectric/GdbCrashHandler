@@ -87,19 +87,7 @@ void GdbCrashHandlerDialog::handleGdbFinished(int exitCode, QProcess::ExitStatus
 	ui.progressBarBacktrace->setVisible(false);
 	ui.pushButtonRegenerate->setVisible(true);
 	if(exitCode != 0 || exitStatus != QProcess::NormalExit) {
-		ui.plainTextEditBacktrace->appendPlainText(tr("Failed to obtain backtrace. Is gdb installed?"));
-	} else {
-		QStringList lines = ui.plainTextEditBacktrace->toPlainText().split("\n", QString::SkipEmptyParts);
-		ui.plainTextEditBacktrace->setPlainText(lines[0]);
-		ui.plainTextEditBacktrace->appendPlainText("\n");
-		for(int i = 1, n = lines.length(); i < n; ++i) {
-			if(lines[i].startsWith("Thread")) {
-				ui.plainTextEditBacktrace->appendPlainText("\n");
-				ui.plainTextEditBacktrace->appendPlainText(lines[i]);
-			} else if(lines[i].startsWith('#')) {
-				ui.plainTextEditBacktrace->appendPlainText(lines[i]);
-			}
-		}
+		ui.plainTextEditBacktrace->appendPlainText(tr("Failed to obtain backtrace. Is gdb/cdb installed?"));
 	}
 	QTextCursor c = ui.plainTextEditBacktrace->textCursor();
 	c.movePosition(QTextCursor::Start);
@@ -114,10 +102,13 @@ void GdbCrashHandlerDialog::regenerateBacktrace() {
 	ui.widgetBusy->setVisible(true);
 	ui.plainTextEditBacktrace->clear();
 
+	mGdbProcess.start("cdb.exe", {"-p", QString::number(mPid), "-lines", "-c", "|;~*kv;q"});
+	/*
 	mGdbProcess.start("gdb", QStringList() << "-p" << QString::number(mPid));
 	mGdbProcess.write("set pagination off\n");
 	mGdbProcess.write(mConfig.gdbBacktraceCommand.isEmpty() ? "thread apply all bt\n" : mConfig.gdbBacktraceCommand.toLocal8Bit());
 	mGdbProcess.write("quit\n");
+	*/
 }
 
 static void addDataPart(QHttpMultiPart* multiPart, const QByteArray& name, const QByteArray& data)
