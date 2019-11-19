@@ -30,7 +30,7 @@
 #include <QTimer>
 #include <QUrlQuery>
 #include <QUuid>
-#include <quazipfile.h>
+//#include <quazipfile.h>
 
 GdbCrashHandlerDialog::GdbCrashHandlerDialog(const GdbCrashHandler::Configuration& config, int pid, const QString& savefile, QWidget *parent)
 	: QDialog(parent)
@@ -142,13 +142,14 @@ void GdbCrashHandlerDialog::sendReport()
 	if(mConfig.submitMethod == GdbCrashHandler::Configuration::SubmitService && !mConfig.submitAddress.isEmpty()) {
 		QByteArray report;
 		QBuffer buf(&report);
+		/*
 		QuaZip quazip(&buf);
 		quazip.open(QuaZip::mdCreate);
 		QuaZipFile quazipfile(&quazip);
 		quazipfile.open(QIODevice::WriteOnly, QuaZipNewInfo("stacktrace.txt"));
 		quazipfile.write(ui.plainTextEditBacktrace->toPlainText().toLocal8Bit());
 		quazipfile.close();
-		quazip.close();
+		quazip.close();*/
 
 		QCryptographicHash crypt(QCryptographicHash::Md5);
 		crypt.addData(report);
