@@ -62,6 +62,7 @@ GdbCrashHandlerDialog::GdbCrashHandlerDialog(const GdbCrashHandler::Configuratio
 
 	connect(ui.pushButtonRegenerate, &QPushButton::clicked, this, &GdbCrashHandlerDialog::regenerateBacktrace);
 
+	mGdbProcess.setEnvironment(QProcess::systemEnvironment());
 	mGdbProcess.setProcessChannelMode(QProcess::SeparateChannels);
 	connect(&mGdbProcess, &QProcess::readyReadStandardOutput, this, &GdbCrashHandlerDialog::appendGdbOutput);
 	connect(&mGdbProcess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(handleGdbFinished(int,QProcess::ExitStatus)));
